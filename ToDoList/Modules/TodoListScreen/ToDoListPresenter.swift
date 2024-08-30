@@ -5,6 +5,8 @@
 //  Created by Sergei Runov on 26.08.2024.
 //
 
+import Foundation
+
 final class ToDoListPresenter {
     
     // MARK: - Properties
@@ -67,6 +69,7 @@ extension ToDoListPresenter: ToDoListInteractorOutput {
     
     func didLoad(tasks: [TaskModel]) {
         numberOfTasks = tasks.count
+        view?.show(tasks: tasks)
     }
     
     func didUpdate(task: TaskModel) {

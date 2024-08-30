@@ -16,6 +16,8 @@ final class ToDoListAssembly {
         let view = ToDoListViewController(presenter: presenter)
         
         router.vc = view
+        presenter.view = view
+        interactor.presenter = presenter
 
         return view
     }

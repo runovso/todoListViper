@@ -13,6 +13,10 @@ final class ToDoListViewController: UIViewController {
     
     let presenter: ToDoListViewOutput
     
+    // MARK: - Private properties
+    
+    private var tasks: [TaskModel] = []
+    
     // MARK: - Subviews
     
     private let toDoList: UITableView = {
@@ -34,10 +38,11 @@ final class ToDoListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupHierarchy()
-        setupUI()
-        setupConstraints()
         presenter.viewDidLoad()
+        setupHierarchy()
+        setupDelegates()
+        setupAppearance()
+        setupConstraints()
     }
     
     // MARK: - Private methods
@@ -46,15 +51,15 @@ final class ToDoListViewController: UIViewController {
         view.addSubview(toDoList)
     }
     
-    private func setupUI() {
-        self.title = "To Do"
-        
-        view.backgroundColor = .systemGroupedBackground
-        
-        toDoList.backgroundColor = .secondarySystemGroupedBackground
-        toDoList.clipsToBounds = true
-        toDoList.layer.cornerRadius = 16
-        toDoList.separatorStyle = .singleLine
+    private func setupDelegates() {
+        toDoList.delegate = self
+        toDoList.dataSource = self
+    }
+    
+    private func setupAppearance() {
+        view.backgroundColor = .systemBackground
+        title = "To Do List"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     private func setupConstraints() {
@@ -71,6 +76,30 @@ final class ToDoListViewController: UIViewController {
 
 extension ToDoListViewController: ToDoListViewInput {
     func show(tasks: [TaskModel]) {
-        
+        self.tasks = tasks
+        toDoList.reloadData()
     }
+}
+
+extension ToDoListViewController: UITableViewDelegate {
+    
+}
+
+extension ToDoListViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        presenter.numberOfRowsInSection
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = toDoList.dequeueReusableCell(withIdentifier: ToDoCellView.reuseIdentifier, for: indexPath) as? ToDoCellView, !tasks.isEmpty else {
+            return UITableViewCell()
+        }
+        cell.configure(withTask: tasks[indexPath.row], presenter: presenter)
+        return cell
+    }
+}
+
+#Preview {
+    let vc = ToDoListAssembly.build()
+    return vc
 }

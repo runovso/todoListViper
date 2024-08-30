@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ToDoCellView: UIView {
+final class ToDoCellView: UITableViewCell {
     
     // MARK: - Static properties
     
@@ -41,23 +41,28 @@ final class ToDoCellView: UIView {
     
     // MARK: - Properties
     
-    private let task: TaskModel
-    private let presenter: ToDoListViewOutput
+    private var task: TaskModel?
+    private var presenter: ToDoListViewOutput?
 
     // MARK: - Initialization
     
-    init(task: TaskModel, presenter: ToDoListViewOutput) {
-        self.task = task
-        self.presenter = presenter
-        super.init(frame: .zero)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupTargetsAndDelegates()
         setupHierarchy()
-        setupAppearance()
         setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Methods
+    
+    func configure(withTask task: TaskModel, presenter: ToDoListViewOutput) {
+        self.task = task
+        self.presenter = presenter
+        setupAppearance()
     }
 }
 
@@ -86,6 +91,8 @@ private extension ToDoCellView {
     }
     
     private func setupAppearance() {
+        guard let task else { return }
+        
         isCompletedButton.tintColor = task.isCompleted ? .systemBlue : .gray
         isCompletedButton.setImage(task.isCompleted ? UIImage(systemName: "circle.inset.filled") : UIImage(systemName: "circle"), for: .normal)
                 
@@ -110,52 +117,42 @@ private extension ToDoCellView {
             .forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
         
         NSLayoutConstraint.activate([
-            rowStack.leadingAnchor.constraint(equalTo: leadingAnchor),
-            rowStack.topAnchor.constraint(equalTo: topAnchor),
-            rowStack.trailingAnchor.constraint(equalTo: trailingAnchor),
-            rowStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+            rowStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            rowStack.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            rowStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            rowStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
             
             isCompletedButton.firstBaselineAnchor.constraint(equalTo: titleTextField.firstBaselineAnchor),
             goToDetailsButton.firstBaselineAnchor.constraint(equalTo: titleTextField.firstBaselineAnchor)
         ])
     }
     
-    func sdjfhs() {
-        Int.random(in: 0...Int(Int16.max))
-    }
-    
     @objc private func didTapIsCompletedButton() {
-        presenter.didTapIsCompletedButton(forTaskWithId: task.id, isCompleted: !task.isCompleted)
+        guard let task else { return }
+        presenter?.didTapIsCompletedButton(forTaskWithId: task.id, isCompleted: !task.isCompleted)
     }
     
     @objc private func didTapDetailsButton() {
-        presenter.didTapDetailsButton(forTaskWithId: task.id)
+        guard let task else { return }
+        presenter?.didTapDetailsButton(forTaskWithId: task.id)
     }
 }
 
 extension ToDoCellView: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
+        guard let task else { return }
         guard let text = titleTextField.text, !text.isEmpty else {
-            presenter.didDeleteTask(withId: task.id)
+            presenter?.didDeleteTask(withId: task.id)
             return
         }
         let newTitle = titleTextField.text
         let newDescription = descriptionTextField.text
-        presenter.didEditTask(withId: task.id, newTitle: newTitle, newDescription: newDescription)
+        presenter?.didEditTask(withId: task.id, newTitle: newTitle, newDescription: newDescription)
     }
 }
 
 #Preview {
-    let cell = ToDoCellView(
-        task: .init(
-            id: 1,
-            title: "Todo title",
-            descrption: "Optional very long description, it should be at multiple lines",
-            createdAt: .now,
-            isCompleted: false),
-        presenter: ToDoListPresenter(
-            interactor: ToDoListInteractor(),
-            router: ToDoListRouter())
-    )
+    let cell = ToDoCellView()
+    cell.configure(withTask: .init(id: 1, title: "Title", descrption: "Optional description", createdAt: .now, isCompleted: false), presenter: ToDoListPresenter(interactor: ToDoListInteractor(), router: ToDoListRouter()))
     return cell
 }
