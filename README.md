@@ -14,6 +14,5 @@ Link to the original doc: https://docs.google.com/document/d/1nz0rdVnwTDID2G9aBG
 ### Issues and decisions:
 
 ❓ API returns 30 todos for defferent users by default
-➡ Ask tasks only for user with id 1 
 
-
+➡ Ask tasks only for user with id 1
