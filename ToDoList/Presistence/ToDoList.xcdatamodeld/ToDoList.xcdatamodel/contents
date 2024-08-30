@@ -2,8 +2,9 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22757" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CDTask" representedClassName="CDTask" syncable="YES" codeGenerationType="class">
         <attribute name="completed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="dateAdded" attributeType="Date" defaultDateTimeInterval="746300760" usesScalarValueType="NO"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="todo" attributeType="String"/>
+        <attribute name="toDoDescription" optional="YES" attributeType="String"/>
     </entity>
 </model>

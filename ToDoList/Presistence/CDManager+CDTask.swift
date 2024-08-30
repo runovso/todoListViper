@@ -58,8 +58,9 @@ extension CDManager where T == CDTask {
         let entity = CDTask(context: moc)
         entity.id = dto.id
         entity.todo = dto.todo
+        entity.toDoDescription = nil
         entity.completed = dto.completed
-        entity.dateAdded = Date()
+        entity.createdAt = Date()
         save(context)
         return entity
     }

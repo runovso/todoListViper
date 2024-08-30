@@ -55,6 +55,7 @@ protocol ToDoListInteractorOutput: AnyObject {
     // Methods to notify Presenter that Interactor did smth
     func didCreate(task: TaskModel)
     func didLoad(task: TaskModel)
+    func didLoad(tasks: [TaskModel])
     func didUpdate(task: TaskModel)
     func didDeleteTask(withId id: Int)
     func didRecieve(error: Error)

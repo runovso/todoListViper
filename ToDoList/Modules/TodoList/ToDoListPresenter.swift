@@ -12,6 +12,10 @@ final class ToDoListPresenter {
     weak var view: ToDoListViewInput?
     let interactor: ToDoListInteractorInput
     
+    // MARK: - Private properties
+    
+    private var numberOfTasks: Int?
+    
     // MARK: - Initialization
     
     init(interactor: ToDoListInteractorInput) {
@@ -20,6 +24,18 @@ final class ToDoListPresenter {
 }
 
 extension ToDoListPresenter: ToDoListViewOutput {
+    var numberOfSections: Int {
+        1
+    }
+    
+    var numberOfRowsInSection: Int {
+        numberOfTasks ?? 0
+    }
+    
+    func viewDidLoad() {
+        interactor.getAllTasks()
+    }
+    
     func didTapCompleteButton(forTaskWithId id: Int) {
         
     }
@@ -38,15 +54,19 @@ extension ToDoListPresenter: ToDoListViewOutput {
 }
 
 extension ToDoListPresenter: ToDoListInteractorOutput {
-    func didCreateTask(withId id: Int) {
+    func didCreate(task: TaskModel) {
         
     }
     
-    func didLoadTask() {
+    func didLoad(task: TaskModel) {
         
     }
     
-    func didUpdateTask() {
+    func didLoad(tasks: [TaskModel]) {
+        numberOfTasks = tasks.count
+    }
+    
+    func didUpdate(task: TaskModel) {
         
     }
     
@@ -57,6 +77,4 @@ extension ToDoListPresenter: ToDoListInteractorOutput {
     func didRecieve(error: any Error) {
         
     }
-    
-    
 }
