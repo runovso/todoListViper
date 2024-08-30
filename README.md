@@ -13,6 +13,9 @@ Link to the original doc: https://docs.google.com/document/d/1nz0rdVnwTDID2G9aBG
 
 ### Issues and decisions:
 
-❓ API returns 30 todos for defferent users by default
-
+❓ API returns 30 todos for defferent users by default. It's to many for a single screen
 ➡ Ask tasks only for user with id 1
+
+❓ Tasks from API have random Int identifier, so it's not clear how to generate new unique identifiers for new tasks
+
+➡ Before setting an identifier to the new task, Int.random(in 0...Int(Int16.max)) is being called and then its result compares to the list of all of existing tasks' indentifiers; if there is a match — repeat, if not — assign result as identifier

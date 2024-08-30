@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - View protocols
+// MARK: - List View protocols
 
 protocol ToDoListViewInput: AnyObject {
     
@@ -15,7 +15,7 @@ protocol ToDoListViewInput: AnyObject {
     var presenter: ToDoListViewOutput { get }
     
     // Methods to tell View to update itself
-    func showTask(id: Int, title: String, description: String?, date: Date, isCompleted: Bool)
+    func show(tasks: [TaskModel])
 }
 
 protocol ToDoListViewOutput: AnyObject {
@@ -27,10 +27,10 @@ protocol ToDoListViewOutput: AnyObject {
     
     // Methods to send Presenter some user actions
     func viewDidLoad()
-    func didTapCompleteButton(forTaskWithId id: Int)
-    func didTapTitleLabel(forTaskWithId id: Int)
-    func didTapDescriptionLabel(forTaskWithId id: Int)
-    func didTapDetailsButton(forTaskWithId id: Int)
+    func didTapIsCompletedButton(forTaskWithId taskId: Int, isCompleted: Bool)
+    func didEditTask(withId taskId: Int, newTitle: String?, newDescription: String?)
+    func didDeleteTask(withId taskId: Int)
+    func didTapDetailsButton(forTaskWithId taskId: Int)
 }
 
 // MARK: - Interactor protocols
@@ -43,6 +43,7 @@ protocol ToDoListInteractorInput: AnyObject {
     // Methods to tell Interactor to do smth
     func createTask(title: String, description: String?)
     func getAllTasks()
+    func getTask(withId taskId: Int) -> CDTask?
     func updateTask(withId id: Int, newTitle: String?, newDescription: String?, isCompleted: Bool?)
     func deleteTask(withId id: Int)
 }
@@ -80,10 +81,10 @@ protocol ToDoListPresenterOutput: AnyObject {
 
 // MARK: - Router protocol
 
-protocol ToDoListRouterInput {
+protocol ToDoListRouterInput: AnyObject {
     
     // Properties
     
     // Methods to navigate to some view
-    func presentDetailScreen(forTask: CDTask)
+    func presentDetailScreen(forTask task: TaskModel)
 }

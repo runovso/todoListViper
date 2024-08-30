@@ -70,7 +70,7 @@ final class ToDoListViewController: UIViewController {
 }
 
 extension ToDoListViewController: ToDoListViewInput {
-    func showTask(id: Int, title: String, description: String?, date: Date, isCompleted: Bool) {
+    func show(tasks: [TaskModel]) {
         
     }
 }

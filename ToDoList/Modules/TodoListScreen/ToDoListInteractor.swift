@@ -23,6 +23,11 @@ extension ToDoListInteractor: ToDoListInteractorInput {
         
     }
     
+    func getTask(withId taskId: Int) -> CDTask? {
+        
+        return nil
+    }
+    
     func updateTask(withId id: Int, newTitle: String?, newDescription: String?, isCompleted: Bool?) {
         
     }

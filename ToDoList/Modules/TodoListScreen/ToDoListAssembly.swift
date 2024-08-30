@@ -12,9 +12,10 @@ final class ToDoListAssembly {
     static func build() -> ToDoListViewController {
         let router = ToDoListRouter()
         let interactor = ToDoListInteractor()
-        let presenter = ToDoListPresenter(interactor: interactor)
+        let presenter = ToDoListPresenter(interactor: interactor, router: router)
         let view = ToDoListViewController(presenter: presenter)
-
+        
+        router.vc = view
 
         return view
     }
