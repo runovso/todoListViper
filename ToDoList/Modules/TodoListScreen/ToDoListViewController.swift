@@ -75,15 +75,21 @@ final class ToDoListViewController: UIViewController {
 }
 
 extension ToDoListViewController: ToDoListViewInput {
+    
+    // MARK: ToDoListViewInput methods
+    
     func show(tasks: [TaskModel]) {
         self.tasks = tasks
         toDoList.reloadData()
     }
 }
 
+// MARK: - UITableViewDelegate methods
+
 extension ToDoListViewController: UITableViewDelegate {
-    
 }
+
+// MARK: - UITableViewDataSource methods
 
 extension ToDoListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -96,6 +102,10 @@ extension ToDoListViewController: UITableViewDataSource {
         }
         cell.configure(withTask: tasks[indexPath.row], presenter: presenter)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 }
 

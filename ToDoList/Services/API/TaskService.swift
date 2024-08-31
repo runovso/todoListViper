@@ -16,7 +16,7 @@ enum TaskServiceError: Error {
 }
 
 protocol TaskServiceType {
-    func fetchUserTasks(completion: @escaping (_ data: TaskAPIResponseDTO?, _ error: Error?) -> Void)
+    func fetchUserTasks(completion: @escaping (Result<TaskAPIResponseDTO, Error>) -> Void)
 }
 
 final class TaskService: TaskServiceType {
@@ -24,30 +24,31 @@ final class TaskService: TaskServiceType {
     let api = "https://dummyjson.com/todos/"
     let userId = 1
     
-    func fetchUserTasks(completion: @escaping (_ data: TaskAPIResponseDTO?, _ error: Error?) -> Void) {
+    func fetchUserTasks(completion: @escaping (Result<TaskAPIResponseDTO, Error>) -> Void) {
         let urlString = api + "user/" + "\(userId)"
         let url = URL(string: urlString)!
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             if let error {
-                completion(nil, error)
+                completion(.failure(error))
+                return
             }
             guard let response = response as? HTTPURLResponse else {
-                completion(nil, TaskServiceError.badResponse)
+                completion(.failure(TaskServiceError.badResponse))
                 return
             }
             guard (0...100).contains(response.statusCode % 200) else {
-                completion(nil, TaskServiceError.badStatusCode(response.statusCode))
+                completion(.failure(TaskServiceError.badStatusCode(response.statusCode)))
                 return
             }
             guard let data else {
-                completion(nil, TaskServiceError.noDataInResponse)
+                completion(.failure(TaskServiceError.noDataInResponse))
                 return
             }
             
             do {
                 let decoder = JSONDecoder()
                 let decodedData = try decoder.decode(TaskAPIResponseDTO.self, from: data)
-                completion(decodedData, nil)
+                completion(.success(decodedData))
             } catch {
                 print("Error while trying to decode tasks: \(error)")
                 return

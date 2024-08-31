@@ -27,10 +27,10 @@ protocol ToDoListViewOutput: AnyObject {
     
     // Methods to send Presenter some user actions
     func viewDidLoad()
-    func didTapIsCompletedButton(forTaskWithId taskId: Int, isCompleted: Bool)
-    func didEditTask(withId taskId: Int, newTitle: String?, newDescription: String?)
-    func didDeleteTask(withId taskId: Int)
-    func didTapDetailsButton(forTaskWithId taskId: Int)
+    func didTapIsCompletedButton(forTaskWithId taskId: Int16, isCompleted: Bool)
+    func didEditTask(withId taskId: Int16, newTitle: String?, newDescription: String?)
+    func didDeleteTask(withId taskId: Int16)
+    func didTapDetailsButton(forTaskWithId taskId: Int16)
 }
 
 // MARK: - Interactor protocols
@@ -43,9 +43,9 @@ protocol ToDoListInteractorInput: AnyObject {
     // Methods to tell Interactor to do smth
     func createTask(title: String, description: String?)
     func getAllTasks()
-    func getTask(withId taskId: Int) -> CDTask?
-    func updateTask(withId id: Int, newTitle: String?, newDescription: String?, isCompleted: Bool?)
-    func deleteTask(withId id: Int)
+    func getTask(withId taskId: Int16) -> CDTask?
+    func updateTask(withId id: Int16, newTitle: String?, newDescription: String?, isCompleted: Bool?)
+    func deleteTask(withId id: Int16)
 }
 
 protocol ToDoListInteractorOutput: AnyObject {
@@ -54,11 +54,11 @@ protocol ToDoListInteractorOutput: AnyObject {
     var interactor: ToDoListInteractorInput { get }
     
     // Methods to notify Presenter that Interactor did smth
-    func didCreate(task: TaskModel)
-    func didLoad(task: TaskModel)
-    func didLoad(tasks: [TaskModel])
-    func didUpdate(task: TaskModel)
-    func didDeleteTask(withId id: Int)
+    func didCreate(task: CDTask)
+    func didLoad(task: CDTask)
+    func didLoad(tasks: [CDTask])
+    func didUpdate(task: CDTask)
+    func didDeleteTask(withId id: Int16)
     func didRecieve(error: Error)
 }
 

@@ -32,9 +32,9 @@ final class ToDoCellView: UITableViewCell {
         return stack
     }()
     
-    private let titleTextField = UITextField()
-    private let descriptionTextField = UITextField()
-    private let dateLabel = UILabel()
+    private let titleTextView = UITextView()
+    private let descriptionTextView = UITextView()
+    private let dateTextView = UITextView()
     
     private let isCompletedButton = UIButton()
     private let goToDetailsButton = UIButton()
@@ -48,6 +48,7 @@ final class ToDoCellView: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.isUserInteractionEnabled = true
         setupTargetsAndDelegates()
         setupHierarchy()
         setupConstraints()
@@ -66,28 +67,28 @@ final class ToDoCellView: UITableViewCell {
     }
 }
 
+// MARK: - Configuration methods
+
 private extension ToDoCellView {
-    
-    // MARK: - Configuration methods
     
     private func setupTargetsAndDelegates() {
         isCompletedButton.addTarget(self, action: #selector(didTapIsCompletedButton), for: .touchUpInside)
         goToDetailsButton.addTarget(self, action: #selector(didTapDetailsButton), for: .touchUpInside)
         
-        titleTextField.delegate = self
-        descriptionTextField.delegate = self
+        titleTextView.delegate = self
+        descriptionTextView.delegate = self
     }
     
     private func setupHierarchy() {
-        addSubview(rowStack)
+        contentView.addSubview(rowStack)
         
         [isCompletedButton, textStack, goToDetailsButton]
             .forEach { rowStack.addArrangedSubview($0) }
                 
-        [titleTextField, descriptionTextField, dateLabel]
+        [titleTextView, descriptionTextView, dateTextView]
             .forEach { textStack.addArrangedSubview($0) }
         
-        textStack.setCustomSpacing(8, after: descriptionTextField)
+        textStack.setCustomSpacing(8, after: descriptionTextView)
     }
     
     private func setupAppearance() {
@@ -95,36 +96,47 @@ private extension ToDoCellView {
         
         isCompletedButton.tintColor = task.isCompleted ? .systemBlue : .gray
         isCompletedButton.setImage(task.isCompleted ? UIImage(systemName: "circle.inset.filled") : UIImage(systemName: "circle"), for: .normal)
+        
+        [titleTextView, descriptionTextView, dateTextView].forEach {
+            $0.isEditable = true
+            $0.isScrollEnabled = false
+            $0.backgroundColor = .clear
+            $0.textContainerInset = .zero
+            $0.textContainer.lineFragmentPadding = 0
+        }
                 
-        titleTextField.font = .preferredFont(forTextStyle: .title3)
-        titleTextField.textColor = task.isCompleted ? .secondaryLabel : .label
-        titleTextField.text = task.title
+        titleTextView.font = .preferredFont(forTextStyle: .title3)
+        titleTextView.textColor = task.isCompleted ? .secondaryLabel : .label
+        titleTextView.text = task.title
         
-        descriptionTextField.font = .preferredFont(forTextStyle: .body)
-        descriptionTextField.textColor = .secondaryLabel
-        descriptionTextField.text = task.descrption
+        descriptionTextView.font = .preferredFont(forTextStyle: .body)
+        descriptionTextView.textColor = .secondaryLabel
+        descriptionTextView.text = task.descrption
         
-        dateLabel.font = .preferredFont(forTextStyle: .footnote)
-        dateLabel.textColor = .secondaryLabel
-        dateLabel.text = "Created at " + task.createdAt.formatted(date: .abbreviated, time: .omitted)
-        
+        dateTextView.font = .preferredFont(forTextStyle: .footnote)
+        dateTextView.isEditable = false
+        dateTextView.textColor = .secondaryLabel
+        dateTextView.text = "Created at " + task.createdAt.formatted(date: .abbreviated, time: .omitted)
+
         goToDetailsButton.tintColor = .systemGreen
         goToDetailsButton.setImage(UIImage(systemName: "info.circle"), for: .normal)
     }
     
     private func setupConstraints() {
-        [rowStack, isCompletedButton, textStack, titleTextField, descriptionTextField, dateLabel, goToDetailsButton]
+        [rowStack, isCompletedButton, textStack, titleTextView, descriptionTextView, dateTextView, goToDetailsButton]
             .forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
         
         NSLayoutConstraint.activate([
-            rowStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            rowStack.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-            rowStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            rowStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
+            rowStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            rowStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            rowStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            rowStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
             
-            isCompletedButton.firstBaselineAnchor.constraint(equalTo: titleTextField.firstBaselineAnchor),
-            goToDetailsButton.firstBaselineAnchor.constraint(equalTo: titleTextField.firstBaselineAnchor)
+            isCompletedButton.firstBaselineAnchor.constraint(equalTo: titleTextView.firstBaselineAnchor),
+            goToDetailsButton.firstBaselineAnchor.constraint(equalTo: titleTextView.firstBaselineAnchor)
         ])
+        
+        [titleTextView, descriptionTextView].forEach { textViewDidChange($0) }
     }
     
     @objc private func didTapIsCompletedButton() {
@@ -138,21 +150,45 @@ private extension ToDoCellView {
     }
 }
 
-extension ToDoCellView: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
+// MARK: - UITextViewDelegate methods
+
+extension ToDoCellView: UITextViewDelegate {
+
+    func textViewDidChange(_ textView: UITextView) {
+        let size = CGSize(width: textView.frame.width, height: .infinity)
+        let estimatedSize = textView.sizeThatFits(size)
+        textView.constraints.forEach {
+            if $0.firstAttribute == .height { $0.constant = estimatedSize.height }
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
         guard let task else { return }
-        guard let text = titleTextField.text, !text.isEmpty else {
+        guard let text = titleTextView.text, !text.isEmpty else {
             presenter?.didDeleteTask(withId: task.id)
             return
         }
-        let newTitle = titleTextField.text
-        let newDescription = descriptionTextField.text
+        let newTitle = titleTextView.text
+        let newDescription = descriptionTextView.text
         presenter?.didEditTask(withId: task.id, newTitle: newTitle, newDescription: newDescription)
     }
 }
 
 #Preview {
     let cell = ToDoCellView()
-    cell.configure(withTask: .init(id: 1, title: "Title", descrption: "Optional description", createdAt: .now, isCompleted: false), presenter: ToDoListPresenter(interactor: ToDoListInteractor(), router: ToDoListRouter()))
+    cell.configure(
+        withTask: .init(
+            id: 1,
+            title: "Title",
+            descrption: "Optional description",
+            createdAt: .now,
+            isCompleted: false),
+        presenter: ToDoListPresenter(
+            interactor: ToDoListInteractor(
+                taskManager: CDManager<CDTask>(),
+                taskService: TaskService()),
+            router: ToDoListRouter()
+        )
+    )
     return cell
 }

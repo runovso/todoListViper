@@ -14,5 +14,8 @@ final class ToDoListRouter {
 extension ToDoListRouter: ToDoListRouterInput {
     func presentDetailScreen(forTask task: TaskModel) {
         let newVc = ToDoDetailViewController(task: task)
+        if let vc, let nc = vc.navigationController {
+            nc.pushViewController(newVc, animated: true)
+        }
     }
 }

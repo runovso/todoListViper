@@ -8,7 +8,7 @@
 import Foundation
 
 struct TaskModel: Identifiable {
-    let id: Int
+    let id: Int16
     let title: String
     let descrption: String?
     let createdAt: Date

@@ -23,21 +23,7 @@ extension CDManager where T == CDTask {
         }
     }
     
-    @discardableResult
-    func update(from dto: TaskDTO, in context: CDContainer.Context = .backgroundContext) -> CDTask {
-        if let entity = get(byId: dto.id, in: context) {
-            entity.todo = dto.todo
-            entity.completed = dto.completed
-            save(context)
-            return entity
-        } else {
-            return create(from: dto, in: context)
-        }
-    }
-        
-    // MARK: - Private methods
-    
-    private func get(byId id: Int16, in context: CDContainer.Context = .backgroundContext) -> CDTask? {
+    func get(byId id: Int16, in context: CDContainer.Context = .backgroundContext) -> CDTask? {
         do {
             let moc = context.moc
             let request = CDTask.fetchRequest()
@@ -52,6 +38,20 @@ extension CDManager where T == CDTask {
         }
     }
     
+    @discardableResult
+    func update(from dto: TaskDTO, in context: CDContainer.Context = .backgroundContext) -> CDTask {
+        if let entity = get(byId: dto.id, in: context) {
+            entity.todo = dto.todo
+            entity.completed = dto.completed
+            save(context)
+            return entity
+        } else {
+            return create(from: dto, in: context)
+        }
+    }
+        
+    // MARK: - Private methods
+        
     @discardableResult
     private func create(from dto: TaskDTO, in context: CDContainer.Context = .backgroundContext) -> CDTask {
         let moc = context.moc

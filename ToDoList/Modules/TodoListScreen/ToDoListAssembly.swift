@@ -11,7 +11,7 @@ final class ToDoListAssembly {
     
     static func build() -> ToDoListViewController {
         let router = ToDoListRouter()
-        let interactor = ToDoListInteractor()
+        let interactor = ToDoListInteractor(taskManager: CDManager<CDTask>(), taskService: TaskService())
         let presenter = ToDoListPresenter(interactor: interactor, router: router)
         let view = ToDoListViewController(presenter: presenter)
         
