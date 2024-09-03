@@ -16,6 +16,7 @@ protocol ToDoListViewInput: AnyObject {
     
     // Methods to tell View to update itself
     func show(tasks: [TaskModel])
+    func show(updatedTask: TaskModel)
 }
 
 protocol ToDoListViewOutput: AnyObject {

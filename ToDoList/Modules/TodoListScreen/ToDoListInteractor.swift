@@ -78,7 +78,9 @@ extension ToDoListInteractor: ToDoListInteractorInput {
     }
     
     func updateTask(withId id: Int16, newTitle: String?, newDescription: String?, isCompleted: Bool?) {
-        
+        if let updatedTask = taskManager.update(byId: id, newTitle: newTitle, newDescription: newDescription, newCompletionStatus: isCompleted) {
+            presenter?.didUpdate(task: updatedTask)
+        }
     }
     
     func deleteTask(withId id: Int16) {

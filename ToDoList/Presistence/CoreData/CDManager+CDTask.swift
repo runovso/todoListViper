@@ -49,6 +49,38 @@ extension CDManager where T == CDTask {
             return create(from: dto, in: context)
         }
     }
+    
+    @discardableResult
+    func update(from model: TaskModel, in context: CDContainer.Context = .backgroundContext) -> CDTask {
+        if let entity = get(byId: model.id, in: context) {
+            entity.todo = model.title
+            entity.toDoDescription = model.descrption
+            entity.completed = model.isCompleted
+            save(context)
+            return entity
+        } else {
+            return create(from: model, in: context)
+        }
+    }
+    
+    @discardableResult
+    func update(byId id: Int16, newTitle: String?, newDescription: String?, newCompletionStatus: Bool?, in context: CDContainer.Context = .backgroundContext) -> CDTask? {
+        if let entity = get(byId: id) {
+            if let newTitle {
+                entity.todo = newTitle
+            }
+            if let newDescription {
+                entity.toDoDescription = newDescription
+            }
+            if let newCompletionStatus {
+                entity.completed = newCompletionStatus
+            }
+            save(context)
+            return entity
+        } else {
+            return nil
+        }
+    }
         
     // MARK: - Private methods
         
@@ -60,6 +92,19 @@ extension CDManager where T == CDTask {
         entity.todo = dto.todo
         entity.toDoDescription = nil
         entity.completed = dto.completed
+        entity.createdAt = Date()
+        save(context)
+        return entity
+    }
+    
+    @discardableResult
+    private func create(from model: TaskModel, in context: CDContainer.Context = .backgroundContext) -> CDTask {
+        let moc = context.moc
+        let entity = CDTask(context: moc)
+        entity.id = model.id
+        entity.todo = model.title
+        entity.toDoDescription = model.descrption
+        entity.completed = model.isCompleted
         entity.createdAt = Date()
         save(context)
         return entity

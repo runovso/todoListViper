@@ -22,6 +22,10 @@ final class ToDoListViewController: UIViewController {
     private let toDoList: UITableView = {
         let table = UITableView()
         table.register(ToDoCellView.self, forCellReuseIdentifier: ToDoCellView.reuseIdentifier)
+        
+        table.rowHeight = UITableView.automaticDimension
+        table.estimatedRowHeight = 44
+        
         return table
     }()
         
@@ -82,6 +86,16 @@ extension ToDoListViewController: ToDoListViewInput {
         self.tasks = tasks
         toDoList.reloadData()
     }
+    
+    func show(updatedTask: TaskModel) {
+        DispatchQueue.main.async {
+            #warning("check for leaks")
+            guard let index = self.tasks.firstIndex(where: { $0.id == updatedTask.id }) else { return }
+            let indexPath = IndexPath(row: index, section: 0)
+            self.tasks[index] = updatedTask
+            self.toDoList.reloadRows(at: [indexPath], with: .none)
+        }
+    }
 }
 
 // MARK: - UITableViewDelegate methods
@@ -105,11 +119,12 @@ extension ToDoListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+        tableView.reloadRows(at: [indexPath], with: .none)
     }
 }
 
 #Preview {
     let vc = ToDoListAssembly.build()
-    return vc
+    let nc = UINavigationController(rootViewController: vc)
+    return nc
 }

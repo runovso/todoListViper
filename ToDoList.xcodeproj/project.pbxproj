@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5660B28F2C834C6500580F7C /* UDManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5660B28E2C834C6500580F7C /* UDManager.swift */; };
 		5660B2912C834E1700580F7C /* UDUserStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5660B2902C834E1700580F7C /* UDUserStorage.swift */; };
+		5660B2932C85961100580F7C /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5660B2922C85961100580F7C /* TestVC.swift */; };
 		56A1750E2C7BA2A5004F7771 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A1750D2C7BA2A5004F7771 /* AppDelegate.swift */; };
 		56A175102C7BA2A5004F7771 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A1750F2C7BA2A5004F7771 /* SceneDelegate.swift */; };
 		56A175122C7BA2A5004F7771 /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56A175112C7BA2A5004F7771 /* ToDoListViewController.swift */; };
@@ -55,6 +56,7 @@
 /* Begin PBXFileReference section */
 		5660B28E2C834C6500580F7C /* UDManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDManager.swift; sourceTree = "<group>"; };
 		5660B2902C834E1700580F7C /* UDUserStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDUserStorage.swift; sourceTree = "<group>"; };
+		5660B2922C85961100580F7C /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		56A1750A2C7BA2A5004F7771 /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		56A1750D2C7BA2A5004F7771 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		56A1750F2C7BA2A5004F7771 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 			children = (
 				56A1750C2C7BA2A5004F7771 /* ToDoList */,
 				56A1755F2C7C9753004F7771 /* ToDoSUICell.swift */,
+				5660B2922C85961100580F7C /* TestVC.swift */,
 				56A175262C7BA2A7004F7771 /* ToDoListTests */,
 				56A175302C7BA2A7004F7771 /* ToDoListUITests */,
 				56A1750B2C7BA2A5004F7771 /* Products */,
@@ -424,6 +427,7 @@
 				56A175502C7BB38C004F7771 /* TaskDTO.swift in Sources */,
 				56A175182C7BA2A5004F7771 /* ToDoList.xcdatamodeld in Sources */,
 				5660B28F2C834C6500580F7C /* UDManager.swift in Sources */,
+				5660B2932C85961100580F7C /* TestVC.swift in Sources */,
 				56A1754A2C7BAEFF004F7771 /* CDContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

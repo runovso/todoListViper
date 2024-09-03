@@ -81,6 +81,7 @@ extension ToDoListPresenter: ToDoListInteractorOutput {
     }
     
     func didUpdate(task: CDTask) {
+        let taskModel = createModel(forTask: task)
         
     }
     
